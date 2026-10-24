@@ -20,22 +20,13 @@ The project also includes educational pages about DNA steganography, how stegano
 
 ## Run the project
 
-### Option 1: VS Code Live Server
+### VS Code Live Server
 
 1. Open this project folder in VS Code.
 2. Install the **Live Server** extension if you don’t already have it.
 3. Open `index.html`.
 4. Right-click the file and choose **Open with Live Server**.
 
-### Option 2: Python
-
-Open a terminal in the project folder and run:
-
-```bash
-python -m http.server 8080
-```
-
-Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## Try the DNA demo
 
