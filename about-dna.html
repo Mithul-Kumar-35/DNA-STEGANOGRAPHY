@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="About DNA Steganography – Theory, structure, how it works, and real-world applications." />
+  <title>About DNA Steganography – Steganography in Cybersecurity</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .dna-helix {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      margin: 20px 0;
+      perspective: 1000px;
+    }
+
+    .dna-strand {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      animation: helixRotate 8s linear infinite;
+    }
+
+    @keyframes helixRotate {
+      0% { transform: rotateZ(0deg) rotateX(0deg); }
+      100% { transform: rotateZ(360deg) rotateX(180deg); }
+    }
+
+    .base-pair {
+      position: absolute;
+      left: 50%;
+      width: 120px;
+      height: 40px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      letter-spacing: 4px;
+    }
+
+    .base {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .base.adenine  { background: #ff6b6b; color: #fff; }
+    .base.thymine  { background: #4ecdc4; color: #fff; }
+    .base.cytosine { background: #ffd93d; }
+    .base.guanine  { background: #95e1d3; }
+
+    .dna-bond {
+      position: absolute;
+      left: 50%;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(26,255,122,.5), rgba(22,217,255,.5));
+      transform: translateX(-50%);
+      top: 50%;
+    }
+
+    .dna-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .dna-table th,
+    .dna-table td {
+      padding: 14px;
+      text-align: center;
+      border: 1px solid rgba(26,255,122,.25);
+      font-size: 13px;
+    }
+
+    .dna-table th {
+      background: rgba(26,255,122,.1);
+      color: var(--neon);
+      font-weight: 700;
+    }
+
+    .dna-table td {
+      color: var(--muted);
+    }
+
+    .dna-table .base-example {
+      font-family: monospace;
+      font-weight: 600;
+      color: var(--neon2);
+    }
+
+    .step-timeline {
+      position: relative;
+      padding: 40px 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+      align-items: start;
+    }
+
+    .timeline-marker {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(26,255,122,.2), rgba(22,217,255,.2));
+      border: 2px solid var(--neon);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 24px;
+      color: var(--neon);
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    .timeline-marker:nth-child(2) { animation-delay: 0.2s; }
+
+    .timeline-content h4 {
+      margin: 0 0 10px;
+      color: var(--neon2);
+      font-size: 16px;
+    }
+
+    .timeline-content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .timeline-content .example-code {
+      background: rgba(0,0,0,.4);
+      border-left: 3px solid var(--neon);
+      padding: 12px 14px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--neon);
+      border-radius: 4px;
+      overflow: auto;
+    }
+
+    .advantages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .advantage-card {
+      background: linear-gradient(180deg, rgba(22,217,255,.08), rgba(0,0,0,.1));
+      border: 1px solid rgba(22,217,255,.25);
+      border-radius: 14px;
+      padding: 20px;
+      transition: var(--transition);
+      animation: slideInUp 0.6s ease-out;
+    }
+
+    .advantage-card:nth-child(2) { animation-delay: 0.1s; }
+    .advantage-card:nth-child(3) { animation-delay: 0.2s; }
+    .advantage-card:nth-child(4) { animation-delay: 0.3s; }
+
+    .advantage-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(22,217,255,.6);
+      box-shadow: 0 10px 30px rgba(22,217,255,.1);
+    }
+
+    .advantage-card .icon { font-size: 32px; margin-bottom: 12px; }
+    .advantage-card h4    { margin: 0 0 8px; color: var(--neon2); }
+    .advantage-card p     { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    .fact-box {
+      background: rgba(26,255,122,.1);
+      border-left: 4px solid var(--neon);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .fact-box strong { color: var(--neon); }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(26,255,122,.4); }
+      50%       { box-shadow: 0 0 0 10px rgba(26,255,122,0); }
+    }
+
+    @media (max-width: 900px) {
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-marker { width: 50px; height: 50px; font-size: 20px; }
+    }
+
+    @media (max-width: 760px) {
+      .dna-table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">STEGO//CYBER</a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="how.html">How it Works</a>
+      <a href="applications.html">Applications</a>
+      <a href="about-dna.html">About DNA Stego</a>
+      <a href="dna.html">DNA Stego</a>
+      <a href="demo.html">Image Stego</a>
+      <a href="conclusion.html">Conclusion</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="kicker">🧬 DNA Steganography 🧬</p>
+        <h1>Using the Language of Life to Hide Digital Secrets</h1>
+        <p class="lead">
+          DNA steganography combines biological science with cybersecurity to hide data within DNA sequences. 
+          Instead of hiding messages in images or audio, this cutting-edge technology encodes information 
+          into the very structure of life itself.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#basics">→ Learn the Basics</a>
+          <a class="btn btn--ghost" href="dna.html">▶ Try the Encoder</a>
+        </div>
+      </div>
+      <div class="hero__panel">
+        <div class="terminalCard">
+          <div class="terminalCard__bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminalCard__title">dna-encoder.log</span>
+          </div>
+          <pre class="terminalCard__body">$ encode "SECRET" --dna
+[+] text: SECRET
+[+] binary: 01010011 01000101
+[+] dna: CTGACGTAT TGCTACGTG
+[>] embedded: success <span class="blink">█</span>
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRODUCTION CARD -->
+    <section class="card">
+      <h2>🔬 What is DNA Steganography?</h2>
+      <p>
+        <b>DNA steganography</b> is a revolutionary method of hiding secret information inside DNA sequences. 
+        It combines three critical fields: <b>cybersecurity</b>, <b>cryptography</b>, and <b>bioinformatics</b>.
+      </p>
+      <p class="muted">
+        Instead of embedding data in digital files like images or audio, DNA steganography encodes information 
+        into the four nucleotide bases of DNA strands. This creates an incredibly secure and biological 
+        method of data concealment that leverages the complexity and robustness of biological systems.
+      </p>
+      
+      <div class="fact-box">
+        <strong>💡 Key Insight:</strong> DNA can store information with extraordinary density and durability. 
+        A single gram of DNA can theoretically store more data than millions of hard drives!
+      </div>
+    </section>
+
+    <!-- DNA BASICS SECTION -->
+    <section class="card" id="basics">
+      <h2>🧬 DNA Structure &amp; Nucleotide Bases</h2>
+      <p class="muted">
+        DNA (deoxyribonucleic acid) consists of four nucleotide bases that form the foundation of all genetic information. 
+        These four bases can represent binary data, making them perfect for steganographic encoding.
+      </p>
+
+      <!-- DNA Helix Animation -->
+      <div class="dna-helix">
+        <div class="dna-strand">
+          <div class="base-pair" style="top: 10%;">
+            <div class="base adenine">A</div>
+            <div class="dna-bond"></div>
+            <div class="base thymine">T</div>
+          </div>
+          <div class="base-pair" style="top: 30%;">
+            <div class="base guanine">G</div>
+            <div class="dna-bond"></div>
+            <div class="base cytosine">C</div>
+          </div>
+          <div class="base-pair" style="top: 50%;">
+            <div class="base adenine">A</div>
+            <div class="dna-bond"></div>
+            <div class="base thymine">T</div>
+          </div>
+          <div class="base-pair" style="top: 70%;">
+            <div class="base cytosine">C</div>
+            <div class="dna-bond"></div>
+            <div class="base guanine">G</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DNA Bases Explanation -->
+      <div class="cards4">
+        <article class="mini">
+          <h3 style="color: #ff6b6b;">Adenine (A)</h3>
+          <p>A purine base, pairs with Thymine. Represented as binary: <b>00</b></p>
+        </article>
+        <article class="mini">
+          <h3 style="color: #4ecdc4;">Thymine (T)</h3>
+          <p>A pyrimidine base, pairs with Adenine. Represented as binary: <b>01</b></p>
+        </article>
+        <article class="mini">
+          <h3 style="color: #95e1d3;">Guanine (G)</h3>
+          <p>A purine base, pairs with Cytosine. Represented as binary: <b>10</b></p>
+        </article>
+        <article class="mini">
+          <h3 style="color: #ffd93d;">Cytosine (C)</h3>
+          <p>A pyrimidine base, pairs with Guanine. Represented as binary: <b>11</b></p>
+        </article>
+      </div>
+
+      <!-- Binary Mapping Table -->
+      <p style="margin-top: 24px; font-weight: 600; color: var(--neon);">Binary to DNA Base Mapping:</p>
+      <table class="dna-table">
+        <thead>
+          <tr>
+            <th>Binary Code</th>
+            <th>DNA Base</th>
+            <th>Color</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="base-example">00</td>
+            <td class="base-example">A (Adenine)</td>
+            <td>🔴 Red</td>
+            <td>First nibble</td>
+          </tr>
+          <tr>
+            <td class="base-example">01</td>
+            <td class="base-example">C (Cytosine)</td>
+            <td>🟡 Yellow</td>
+            <td>Second nibble</td>
+          </tr>
+          <tr>
+            <td class="base-example">10</td>
+            <td class="base-example">G (Guanine)</td>
+            <td>🟢 Green</td>
+            <td>Third nibble</td>
+          </tr>
+          <tr>
+            <td class="base-example">11</td>
+            <td class="base-example">T (Thymine)</td>
+            <td>🔵 Cyan</td>
+            <td>Fourth nibble</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="card">
+      <h2>⚙️ How DNA Steganography Works</h2>
+      <p class="muted" style="margin-bottom: 24px;">
+        DNA steganography follows a systematic 5-step process to encode and hide data within DNA sequences.
+      </p>
+
+      <div class="step-timeline">
+        <!-- Step 1 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">1️⃣</div>
+          <div class="timeline-content">
+            <h4>Convert Message to Binary</h4>
+            <p>
+              The secret message is first converted into binary format. Each character is represented as 8 bits.
+              For example, the letter 'H' (ASCII 72) becomes '01001000' in binary.
+            </p>
+            <div class="example-code">
+Message: "HI"
+Binary:  01001000 01001001
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">2️⃣</div>
+          <div class="timeline-content">
+            <h4>Convert Binary to DNA Bases</h4>
+            <p>
+              Binary pairs are mapped to DNA bases using the encoding scheme. Every 2 bits become one DNA nucleotide.
+              This reduces the data size while maintaining information integrity.
+            </p>
+            <div class="example-code">
+Binary: 01 00 10 00 01 00 10 01
+DNA:    C  A  G  A  C  A  G  C
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">3️⃣</div>
+          <div class="timeline-content">
+            <h4>Embed into DNA Sequence</h4>
+            <p>
+              The encoded DNA bases are hidden within a larger, innocuous DNA sequence. This makes detection 
+              extremely difficult because the hidden sequence blends seamlessly with the carrier DNA.
+            </p>
+            <div class="example-code">
+Host:    ATCGTACGATCGATCGCATCGATCGATCG
+Hidden:  CAGACAGC
+Result:  ATCGTAC CAGACAGC GATCGATCGCATCGATCGATCG
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">4️⃣</div>
+          <div class="timeline-content">
+            <h4>Transmission &amp; Storage</h4>
+            <p>
+              The encoded DNA sequence can be transmitted or stored in multiple ways: digitally via databases, 
+              physically synthesized into actual DNA, or embedded in biological samples.
+            </p>
+            <div class="example-code">
+Options: Digital Store | DNA Synthesis | Biological Sample
+Security: High | Very High | Ultra-High
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">5️⃣</div>
+          <div class="timeline-content">
+            <h4>Decoding &amp; Extraction</h4>
+            <p>
+              The recipient reverses the process: extract hidden DNA, convert to binary, map DNA bases to bits, 
+              and convert binary back to the original message.
+            </p>
+            <div class="example-code">
+Extract: CAGACAGC
+Binary:  01 10 00 10 01 10 00 10
+Text:    "HI"
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADVANTAGES SECTION -->
+    <section class="card">
+      <h2>✨ Advantages of DNA Steganography</h2>
+      <p class="muted" style="margin-bottom: 24px;">DNA steganography offers unique advantages over traditional methods:</p>
+
+      <div class="advantages-grid">
+        <div class="advantage-card">
+          <div class="icon">💾</div>
+          <h4>Extreme Data Density</h4>
+          <p>1 gram of DNA can store petabytes of data—thousands of times more than conventional storage.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="icon">🔍</div>
+          <h4>Virtually Undetectable</h4>
+          <p>Hidden data blends perfectly with natural DNA sequences, making detection extremely difficult.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="icon">🔐</div>
+          <h4>Advanced Security</h4>
+          <p>Combines with encryption for ultra-secure communication impossible to intercept digitally.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="icon">🚀</div>
+          <h4>Future Technology</h4>
+          <p>Represents the next frontier in data storage and cybersecurity innovation.</p>
+        </div>
+      </div>
+
+      <div class="fact-box" style="margin-top: 24px;">
+        <strong>📊 Storage Comparison:</strong> A single gram of DNA could store the entire Library of Congress 
+        (15 terabytes) about 200 million times over. This represents an information density incomparable to any 
+        digital storage technology currently available.
+      </div>
+    </section>
+
+    <!-- APPLICATIONS SECTION -->
+    <section class="card">
+      <h2>🌍 Real-World Applications</h2>
+      <p class="muted" style="margin-bottom: 20px;">DNA steganography is opening new possibilities in security and data storage:</p>
+
+      <div class="cards4">
+        <article class="mini">
+          <h3>🚁 Military Communication</h3>
+          <p>Secure transmission of classified information through biological channels that evade digital detection.</p>
+        </article>
+        <article class="mini">
+          <h3>💾 Archival Storage</h3>
+          <p>Long-term storage of critical data (government records, medical archives) with extraordinary durability.</p>
+        </article>
+        <article class="mini">
+          <h3>🛡️ Anti-Counterfeiting</h3>
+          <p>Embedding authentication codes in biological markers on products to prevent forgery.</p>
+        </article>
+        <article class="mini">
+          <h3>🏥 Medical Watermarking</h3>
+          <p>Including patient data and authenticity markers in genetic databases and biological samples.</p>
+        </article>
+        <article class="mini">
+          <h3>🔒 Biometric Security</h3>
+          <p>Integrating secure identifiers into DNA sequences for ultimate personal authentication.</p>
+        </article>
+        <article class="mini">
+          <h3>🌱 Distributed Storage</h3>
+          <p>Storing data across living organisms or biosamples for distributed, biological backup systems.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONCLUSION SECTION -->
+    <section class="card">
+      <h2>🌟 Conclusion: The Future of Data Hiding</h2>
+      <p>
+        DNA steganography represents a paradigm shift in how we think about data security and storage. 
+        By leveraging the complexity and robustness of biological systems, we can achieve levels of 
+        data protection and storage capacity that are simply impossible with digital methods alone.
+      </p>
+      <p class="muted">
+        This emerging technology demonstrates that the most sophisticated security solutions often come from 
+        looking beyond traditional digital boundaries and embracing biological innovation. As DNA synthesis 
+        costs continue to drop and sequencing technology advances, DNA steganography is poised to become a 
+        critical tool in cybersecurity and data preservation for the next century.
+      </p>
+
+      <div class="fact-box">
+        <strong>🚀 The Future:</strong> Experts predict DNA-based data storage and steganography will become 
+        mainstream within the next 10-20 years, potentially revolutionizing how governments, corporations, 
+        and organizations store and protect their most sensitive information.
+      </div>
+
+      <div style="margin-top: 24px; text-align: center;">
+        <a class="btn btn--primary" href="dna.html">▶ Try the DNA Encoder</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__title">🧬 DNA Steganography Topics</div>
+        <ul class="footer__links">
+          <li>DNA structure and nucleotide bases</li>
+          <li>Binary to DNA encoding schemes</li>
+          <li>DNA synthesis and sequencing</li>
+          <li>Bioinformatics &amp; cryptography</li>
+          <li>Emerging biotech applications</li>
+        </ul>
+      </div>
+      <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity | About DNA Stego</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

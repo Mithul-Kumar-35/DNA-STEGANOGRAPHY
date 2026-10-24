@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Image Stego - Hide and extract secret messages in images">
+    <title>Image Stego - Encode & Decode</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .section {
+            background: linear-gradient(180deg, rgba(7,24,38,.62), rgba(0,0,0,.14));
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--stroke);
+            transition: var(--transition);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            border-color: rgba(26,255,122,.5);
+            box-shadow: 0 30px 80px rgba(26,255,122,.1);
+        }
+        
+        .section h3 {
+            color: var(--neon2);
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        input[type="file"],
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(26, 255, 122, 0.3);
+            color: var(--text);
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        input[type="file"]:focus,
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: rgba(26, 255, 122, 0.6);
+            box-shadow: 0 0 0 4px rgba(26,255,122,.1);
+            outline: none;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, rgba(26,255,122,.22), rgba(22,217,255,.10));
+            color: var(--text);
+            border: 1px solid rgba(26,255,122,.55);
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background: linear-gradient(135deg, rgba(26,255,122,.35), rgba(22,217,255,.2));
+            box-shadow: 0 0 20px rgba(26,255,122,.2);
+        }
+        
+        .output-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(26, 255, 122, 0.4);
+            padding: 16px;
+            border-radius: 14px;
+            margin-top: 10px;
+            min-height: 100px;
+            word-break: break-all;
+            color: var(--neon);
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .output-box:hover {
+            border-color: rgba(26,255,122,.6);
+            background: rgba(0, 0, 0, 0.65);
+        }
+        
+        .canvas-preview {
+            width: 100%;
+            border: 1px solid rgba(26, 255, 122, 0.3);
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .canvas-preview:hover {
+            border-color: rgba(26,255,122,.5);
+            box-shadow: 0 0 20px rgba(26,255,122,.1);
+        }
+        
+        .status {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            animation: slideInUp 0.4s ease-out;
+        }
+        
+        .status.success {
+            background: rgba(26, 255, 122, 0.15);
+            color: var(--neon);
+            border: 1px solid rgba(26,255,122,.5);
+        }
+        
+        .status.error {
+            background: rgba(255, 100, 100, 0.15);
+            color: #ff6464;
+            border: 1px solid rgba(255,100,100,.5);
+        }
+
+        .history-panel {
+            margin-top: 18px;
+            background: rgba(26,255,122,.08);
+            border: 1px solid rgba(26,255,122,.35);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .history-item {
+            background: rgba(0,0,0,.28);
+            border: 1px solid rgba(22,217,255,.28);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .history-item h4 {
+            margin: 0 0 6px;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .history-item p {
+            margin: 0;
+            color: var(--neon2);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        /* Demo explanation section */
+        .demo__explanation {
+            margin-top: 32px;
+            padding: 24px;
+            background: rgba(26,255,122,.05);
+            border-radius: 16px;
+            border: 1px solid rgba(26,255,122,.25);
+        }
+
+        .demo__explanation h3 {
+            margin-top: 0;
+            color: var(--neon2);
+        }
+
+        .demo__steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .demo__step {
+            display: flex;
+            gap: 12px;
+        }
+
+        .demo__step-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26,255,122,.15);
+            border: 1px solid rgba(26,255,122,.4);
+            border-radius: 50%;
+            font-weight: 800;
+            color: var(--neon);
+        }
+
+        .demo__step-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .demo__tips {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(22,217,255,.05);
+            border-radius: 16px;
+            border: 1px solid rgba(22,217,255,.25);
+        }
+
+        .demo__tips h3 {
+            margin-top: 0;
+            color: var(--neon2);
+        }
+        
+        @media (max-width: 900px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+
+            .demo__steps {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .demo__steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg" aria-hidden="true"></canvas>
+    
+    <header class="topbar">
+        <a class="brand" href="index.html">STEGO//CYBER</a>
+        <nav class="nav">
+            <a href="about.html">About</a>
+            <a href="how.html">How it Works</a>
+            <a href="applications.html">Applications</a>
+            <a href="about-dna.html">About DNA Stego</a>
+            <a href="dna.html">DNA Stego</a>
+            <a href="demo.html">Image Stego</a>
+            <a href="conclusion.html">Conclusion</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>⚙️ Interactive Image Stego</h2>
+            <p class="muted">
+                Least Significant Bit (LSB) steganography hides data in the least significant bits of image pixels.
+                Encode a secret message into an image, then extract it back!
+            </p>
+
+            <div class="history-panel">
+                <h3 style="margin: 0; color: var(--neon2); font-size: 15px;">History (Image Stego Page)</h3>
+                <div class="history-grid">
+                    <div class="history-item">
+                        <h4>Images Encoded</h4>
+                        <p id="demoEncodedCount">0</p>
+                    </div>
+                    <div class="history-item">
+                        <h4>Images Decoded</h4>
+                        <p id="demoDecodedCount">0</p>
+                    </div>
+                </div>
+                <button class="btn btn--ghost" id="demoHistoryResetBtn" style="margin-top: 12px; width: 100%;">Reset Image Stego History</button>
+            </div>
+
+            <div class="demo-container">
+                <!-- ENCODING SECTION -->
+                <div class="section">
+                    <h3>🔐 Encode (Hide Message)</h3>
+                    
+                    <div class="form-group">
+                        <label for="encodeImage">Step 1: Select Image</label>
+                        <input type="file" id="encodeImage" accept="image/*">
+                        <small style="color: var(--muted); font-size: 11px; margin-top: 4px; display: block;">PNG or JPEG recommended</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="encodeMessage">Step 2: Type Secret Message</label>
+                        <textarea id="encodeMessage" placeholder="Enter your secret message here..."></textarea>
+                    </div>
+
+                    <button class="btn btn--primary" id="encodeBtn" style="width: 100%; margin-top: 12px;">➜ Encode & Download</button>
+                    
+                    <canvas id="encodeCanvas" class="canvas-preview" width="300" height="200"></canvas>
+                    
+                    <div class="status" id="encodeStatus" style="display: none;"></div>
+                </div>
+
+                <!-- DECODING SECTION -->
+                <div class="section">
+                    <h3>🔓 Decode (Extract Message)</h3>
+                    
+                    <div class="form-group">
+                        <label for="decodeImage">Step 1: Select Stego Image</label>
+                        <input type="file" id="decodeImage" accept="image/*">
+                        <small style="color: var(--muted); font-size: 11px; margin-top: 4px; display: block;">Upload the image with hidden data</small>
+                    </div>
+
+                    <button class="btn btn--ghost" id="decodeBtn" style="width: 100%; margin-top: 12px;">➜ Extract Message</button>
+
+                    <label style="margin-top: 18px;">Extracted Message:</label>
+                    <div class="output-box" id="decodedOutput">No message extracted yet...</div>
+                    
+                    <button class="btn btn--ghost" id="clearBtn" style="margin-top: 14px; width: 100%;">↺ Reset All</button>
+                    
+                    <canvas id="decodeCanvas" class="canvas-preview" width="300" height="200"></canvas>
+                    
+                    <div class="status" id="decodeStatus" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- EXPLANATION SECTION -->
+            <section class="demo__explanation">
+                <h3>🎓 How LSB Steganography Works</h3>
+                <div class="demo__steps">
+                    <div class="demo__step">
+                        <div class="demo__step-number">1</div>
+                        <div class="demo__step-content">
+                            <strong>Convert to Binary:</strong> Text is converted to binary format
+                        </div>
+                    </div>
+                    <div class="demo__step">
+                        <div class="demo__step-number">2</div>
+                        <div class="demo__step-content">
+                            <strong>Find LSBs:</strong> Locate least significant bits in pixel channels
+                        </div>
+                    </div>
+                    <div class="demo__step">
+                        <div class="demo__step-number">3</div>
+                        <div class="demo__step-content">
+                            <strong>Replace LSB:</strong> Replace LSB with message bits
+                        </div>
+                    </div>
+                    <div class="demo__step">
+                        <div class="demo__step-number">4</div>
+                        <div class="demo__step-content">
+                            <strong>Invisible Change:</strong> Minimal visual impact (often imperceptible)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TIPS SECTION -->
+            <section class="demo__tips">
+                <h3>💡 Tips & Capacity Guide</h3>
+                <ul class="bullets">
+                    <li><span class="icon">⚡</span> <strong>Image Size Matters:</strong> Each pixel can store 1 bit per channel (3 bits per RGB pixel)</li>
+                    <li><span class="icon">⚡</span> <strong>Capacity:</strong> A 256×256 image can hide ~24KB of data</li>
+                    <li><span class="icon">⚡</span> <strong>PNG is Best:</strong> PNG uses lossless compression - JPEG destroys LSBs</li>
+                    <li><span class="icon">⚡</span> <strong>Detection:</strong> Steganalysis tools use chi-square analysis to detect patterns</li>
+                    <li><span class="icon">⚡</span> <strong>Security:</strong> Combine LSB with encryption for true security</li>
+                </ul>
+            </section>
+
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div>
+                <div class="footer__title">🔬 Image Stego Capabilities</div>
+                <ul class="footer__links">
+                    <li>Real-time LSB encoding & decoding</li>
+                    <li>Binary message conversion</li>
+                    <li>Image preview & validation</li>
+                    <li>Automated stego image download</li>
+                </ul>
+            </div>
+            <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity | Interactive Image Stego</div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Get all elements
+        const encodeImageInput = document.getElementById('encodeImage');
+        const encodeMessageInput = document.getElementById('encodeMessage');
+        const encodeBtn = document.getElementById('encodeBtn');
+        const encodeCanvas = document.getElementById('encodeCanvas');
+        const encodeStatus = document.getElementById('encodeStatus');
+
+        const decodeImageInput = document.getElementById('decodeImage');
+        const decodeBtn = document.getElementById('decodeBtn');
+        const decodeCanvas = document.getElementById('decodeCanvas');
+        const decodedOutput = document.getElementById('decodedOutput');
+        const decodeStatus = document.getElementById('decodeStatus');
+        const clearBtn = document.getElementById('clearBtn');
+        const demoEncodedCount = document.getElementById('demoEncodedCount');
+        const demoDecodedCount = document.getElementById('demoDecodedCount');
+        const demoHistoryResetBtn = document.getElementById('demoHistoryResetBtn');
+
+        const STEGO_HISTORY_KEY = 'stegoHistory';
+
+        function getHistory() {
+            const fallback = { dna: { encoded: 0, decoded: 0 }, demo: { encoded: 0, decoded: 0 } };
+            try {
+                const raw = localStorage.getItem(STEGO_HISTORY_KEY);
+                if (!raw) return fallback;
+                const parsed = JSON.parse(raw);
+                return {
+                    dna: {
+                        encoded: Number(parsed?.dna?.encoded || 0),
+                        decoded: Number(parsed?.dna?.decoded || 0)
+                    },
+                    demo: {
+                        encoded: Number(parsed?.demo?.encoded || 0),
+                        decoded: Number(parsed?.demo?.decoded || 0)
+                    }
+                };
+            } catch (_) {
+                return fallback;
+            }
+        }
+
+        function saveHistory(history) {
+            localStorage.setItem(STEGO_HISTORY_KEY, JSON.stringify(history));
+        }
+
+        function renderDemoHistory() {
+            const history = getHistory();
+            demoEncodedCount.textContent = String(history.demo.encoded);
+            demoDecodedCount.textContent = String(history.demo.decoded);
+        }
+
+        function incrementDemoHistory(type) {
+            const history = getHistory();
+            history.demo[type] += 1;
+            saveHistory(history);
+            renderDemoHistory();
+        }
+
+        // Canvas contexts
+        const encodeCtx = encodeCanvas.getContext('2d', { willReadFrequently: true });
+        const decodeCtx = decodeCanvas.getContext('2d', { willReadFrequently: true });
+
+        // Store loaded images (full resolution)
+        let encodeImageData = null;
+        let encodeImageObj = null;
+        let decodeImageData = null;
+        let decodeImageObj = null;
+
+        // ========== UTILITY FUNCTIONS ==========
+        function showStatus(element, message, isError = false) {
+            element.textContent = message;
+            element.className = isError ? 'status error' : 'status success';
+            element.style.display = 'block';
+        }
+
+        function hideStatus(element) {
+            element.style.display = 'none';
+        }
+
+        function drawImageToCanvas(file, canvas, ctx, callback) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Create a full-resolution canvas for the actual image data
+                    const fullCanvas = document.createElement('canvas');
+                    fullCanvas.width = img.width;
+                    fullCanvas.height = img.height;
+                    const fullCtx = fullCanvas.getContext('2d');
+                    fullCtx.drawImage(img, 0, 0);
+                    
+                    // Get full-resolution image data
+                    const fullImageData = fullCtx.getImageData(0, 0, img.width, img.height);
+                    
+                    // Draw preview (scaled for UI)
+                    const w = canvas.width;
+                    const h = canvas.height;
+                    const scale = Math.min(w / img.width, h / img.height);
+                    const scaledWidth = img.width * scale;
+                    const scaledHeight = img.height * scale;
+                    const x = (w - scaledWidth) / 2;
+                    const y = (h - scaledHeight) / 2;
+
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+
+                    callback(fullImageData, img);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ========== ENCODE HANDLER ==========
+        encodeImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            drawImageToCanvas(file, encodeCanvas, encodeCtx, (imageData, imgObj) => {
+                encodeImageData = imageData;
+                encodeImageObj = imgObj;
+                hideStatus(encodeStatus);
+                showStatus(encodeStatus, '✓ Image loaded (' + imgObj.width + 'x' + imgObj.height + '). Ready to encode!', false);
+            });
+        });
+
+        encodeBtn.addEventListener('click', () => {
+            if (!encodeImageData) {
+                showStatus(encodeStatus, '✗ Please select an image first', true);
+                return;
+            }
+
+            const message = encodeMessageInput.value;
+            if (!message) {
+                showStatus(encodeStatus, '✗ Please enter a message', true);
+                return;
+            }
+
+            try {
+                // Encode the message
+                const encoded = encodeMessage(encodeImageData, message);
+                
+                if (encoded.success) {
+                    // Create download canvas
+                    const dlCanvas = document.createElement('canvas');
+                    dlCanvas.width = encoded.imageData.width;
+                    dlCanvas.height = encoded.imageData.height;
+                    const dlCtx = dlCanvas.getContext('2d');
+                    dlCtx.putImageData(encoded.imageData, 0, 0);
+                    
+                    dlCanvas.toBlob((blob) => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'stego_image.png';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        incrementDemoHistory('encoded');
+                        showStatus(encodeStatus, '✓ Message encoded! Downloaded stego_image.png', false);
+                    }, 'image/png');
+                } else {
+                    showStatus(encodeStatus, '✗ ' + encoded.error, true);
+                }
+            } catch (error) {
+                showStatus(encodeStatus, '✗ Error: ' + error.message, true);
+            }
+        });
+
+        // ========== DECODE HANDLER ==========
+        decodeImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            drawImageToCanvas(file, decodeCanvas, decodeCtx, (imageData, imgObj) => {
+                decodeImageData = imageData;
+                decodeImageObj = imgObj;
+                hideStatus(decodeStatus);
+                showStatus(decodeStatus, '✓ Image loaded (' + imgObj.width + 'x' + imgObj.height + '). Ready to decode!', false);
+            });
+        });
+
+        decodeBtn.addEventListener('click', () => {
+            if (!decodeImageData) {
+                showStatus(decodeStatus, '✗ Please select an image first', true);
+                return;
+            }
+
+            try {
+                const decoded = decodeMessage(decodeImageData);
+                
+                if (decoded.success) {
+                    decodedOutput.textContent = decoded.message;
+                    incrementDemoHistory('decoded');
+                    showStatus(decodeStatus, '✓ Message decoded successfully!', false);
+                } else {
+                    decodedOutput.textContent = 'No message found';
+                    showStatus(decodeStatus, '✗ ' + decoded.error, true);
+                }
+            } catch (error) {
+                decodedOutput.textContent = 'Error decoding';
+                showStatus(decodeStatus, '✗ Error: ' + error.message, true);
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            encodeImageInput.value = '';
+            encodeMessageInput.value = '';
+            decodeImageInput.value = '';
+            decodedOutput.textContent = 'No message decoded yet...';
+            encodeImageData = null;
+            encodeImageObj = null;
+            decodeImageData = null;
+            decodeImageObj = null;
+            hideStatus(encodeStatus);
+            hideStatus(decodeStatus);
+            
+            // Clear canvases
+            encodeCtx.clearRect(0, 0, encodeCanvas.width, encodeCanvas.height);
+            decodeCtx.clearRect(0, 0, decodeCanvas.width, decodeCanvas.height);
+        });
+
+        demoHistoryResetBtn.addEventListener('click', () => {
+            const history = getHistory();
+            history.demo.encoded = 0;
+            history.demo.decoded = 0;
+            saveHistory(history);
+            renderDemoHistory();
+            showStatus(decodeStatus, '✓ Demo history reset', false);
+        });
+
+        // ========== LSB STEGANOGRAPHY FUNCTIONS ==========
+        function encodeMessage(imageData, message) {
+            const data = new Uint8ClampedArray(imageData.data);
+            const msgBytes = new TextEncoder().encode(message);
+            const msgLen = msgBytes.length;
+            const pixelCount = data.length / 4;
+
+            // Check capacity: 32 bits for length + 8 bits per character
+            const bitsNeeded = 32 + (msgLen * 8);
+            if (bitsNeeded > pixelCount) {
+                return {
+                    success: false,
+                    error: `Message too large (need ${bitsNeeded} pixels, have ${pixelCount})`
+                };
+            }
+
+            // Encode length in first 32 pixels (LSB of red channel)
+            for (let i = 0; i < 32; i++) {
+                const bit = (msgLen >>> (31 - i)) & 1;
+                const idx = i * 4;
+                data[idx] = (data[idx] & 0xFE) | bit;
+            }
+
+            // Encode message
+            let bitPos = 0;
+            for (let byteIdx = 0; byteIdx < msgLen; byteIdx++) {
+                const byte = msgBytes[byteIdx];
+                for (let bitIdx = 0; bitIdx < 8; bitIdx++) {
+                    const bit = (byte >>> (7 - bitIdx)) & 1;
+                    const pixelIdx = 32 + bitPos;
+                    const dataIdx = pixelIdx * 4;
+                    data[dataIdx] = (data[dataIdx] & 0xFE) | bit;
+                    bitPos++;
+                }
+            }
+
+            return {
+                success: true,
+                imageData: new ImageData(data, imageData.width, imageData.height)
+            };
+        }
+
+        function decodeMessage(imageData) {
+            const data = imageData.data;
+            const pixelCount = data.length / 4;
+
+            if (pixelCount < 32) {
+                return { success: false, error: 'Image too small' };
+            }
+
+            // Read length from first 32 pixels
+            let msgLen = 0;
+            for (let i = 0; i < 32; i++) {
+                const idx = i * 4;
+                const bit = data[idx] & 1;
+                msgLen = (msgLen << 1) | bit;
+            }
+
+            // Validate length
+            if (msgLen === 0 || msgLen > 100000) {
+                return { success: false, error: 'No valid message found' };
+            }
+
+            const bitsNeeded = 32 + (msgLen * 8);
+            if (bitsNeeded > pixelCount) {
+                return { success: false, error: 'Image corrupted or incomplete' };
+            }
+
+            // Read message bytes
+            const msgBytes = new Uint8Array(msgLen);
+            let bitPos = 0;
+            
+            for (let byteIdx = 0; byteIdx < msgLen; byteIdx++) {
+                let byte = 0;
+                for (let bitIdx = 0; bitIdx < 8; bitIdx++) {
+                    const pixelIdx = 32 + bitPos;
+                    const dataIdx = pixelIdx * 4;
+                    const bit = data[dataIdx] & 1;
+                    byte = (byte << 1) | bit;
+                    bitPos++;
+                }
+                msgBytes[byteIdx] = byte;
+            }
+
+            try {
+                const message = new TextDecoder().decode(msgBytes);
+                return { success: true, message: message };
+            } catch (e) {
+                return { success: false, error: 'Failed to decode message' };
+            }
+        }
+
+        // Set year in footer
+        renderDemoHistory();
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="DNA Steganography - Hiding Data in DNA Sequences. Explore how biological sequences hide digital secrets." />
+  <title>DNA Steganography – Steganography in Cybersecurity</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .converter-box {
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(26,255,122,.3);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 20px 0;
+      transition: var(--transition);
+    }
+
+    .converter-box:hover {
+      border-color: rgba(26,255,122,.6);
+      box-shadow: 0 0 20px rgba(26,255,122,.1);
+    }
+
+    .converter-input {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .converter-input label {
+      display: block;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .converter-input textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(26,255,122,.3);
+      color: var(--text);
+      border-radius: 10px;
+      font-family: monospace;
+      resize: vertical;
+      min-height: 80px;
+      transition: var(--transition);
+    }
+
+    .converter-input textarea:focus {
+      border-color: rgba(26,255,122,.6);
+      box-shadow: 0 0 0 4px rgba(26,255,122,.1);
+      outline: none;
+    }
+
+    .converter-output {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .output-card {
+      background: rgba(26,255,122,.08);
+      border: 1px solid rgba(26,255,122,.3);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .output-card h4 {
+      margin: 0 0 12px;
+      color: var(--neon2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .output-card .value {
+      color: var(--neon);
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .fact-box {
+      background: rgba(26,255,122,.1);
+      border-left: 4px solid var(--neon);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .fact-box strong {
+      color: var(--neon);
+    }
+
+    @media (max-width: 900px) {
+      .converter-output {
+        grid-template-columns: 1fr;
+      }
+
+      /* Encode/Decode responsive */
+      .card > div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 10%, rgba(22,217,255,.14), transparent 40%), rgba(0,0,0,.82);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      width: min(520px, 100%);
+      background: rgba(5,10,16,.92);
+      border: 1px solid rgba(26,255,122,.35);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 16px 50px rgba(0,0,0,.45);
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .auth-tab {
+      padding: 10px;
+      border: 1px solid rgba(22,217,255,.35);
+      border-radius: 10px;
+      background: rgba(22,217,255,.08);
+      color: var(--neon2);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .auth-tab.active {
+      border-color: rgba(26,255,122,.6);
+      color: var(--neon);
+      background: rgba(26,255,122,.12);
+    }
+
+    .auth-form {
+      display: none;
+      gap: 12px;
+    }
+
+    .auth-form.active {
+      display: grid;
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(26,255,122,.3);
+      background: rgba(0,0,0,.35);
+      color: var(--text);
+      outline: none;
+    }
+
+    .auth-form input:focus {
+      border-color: rgba(26,255,122,.65);
+      box-shadow: 0 0 0 3px rgba(26,255,122,.12);
+    }
+
+    .auth-submit {
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid rgba(26,255,122,.5);
+      color: var(--neon);
+      background: linear-gradient(135deg, rgba(26,255,122,.18), rgba(22,217,255,.14));
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .auth-error {
+      color: #ff7a7a;
+      min-height: 18px;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .auth-hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    .auth-user {
+      color: var(--neon2);
+      font-size: 12px;
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+
+    .history-panel {
+      margin-top: 18px;
+      background: rgba(26,255,122,.08);
+      border: 1px solid rgba(26,255,122,.35);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .history-item {
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(22,217,255,.28);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .history-item h4 {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .history-item p {
+      margin: 0;
+      color: var(--neon2);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logout-btn {
+      background: rgba(255,107,107,.16);
+      border: 1px solid rgba(255,107,107,.4);
+      color: #ff8a8a;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+
+    .locked main,
+    .locked footer {
+      visibility: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @media (max-width: 760px) {
+      .auth-gate {
+        padding: 12px;
+      }
+
+      .auth-card {
+        padding: 16px;
+        border-radius: 12px;
+      }
+
+      .auth-tab,
+      .auth-submit {
+        font-size: 13px;
+      }
+
+      #autoEncodeBtn,
+      #autoDecodeBtn,
+      #autoEncodeReset,
+      #autoDecodeReset {
+        font-size: 11px;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .auth-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      #autoDecodedMessage {
+        font-size: 13px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">STEGO//CYBER</a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="how.html">How it Works</a>
+      <a href="applications.html">Applications</a>
+      <a href="about-dna.html">About DNA Stego</a>
+      <a href="dna.html">DNA Stego</a>
+      <a href="demo.html">Image Stego</a>
+      <a href="conclusion.html">Conclusion</a>
+    </nav>
+    <div style="display:flex; align-items:center;">
+      <span id="authUserLabel" class="auth-user"></span>
+      <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-label="Login required">
+    <div class="auth-card">
+      <h3 style="margin:0 0 8px; color: var(--neon);">DNA Stego Dashboard Access</h3>
+      <p style="margin:0 0 14px; color: var(--muted); font-size: 13px;">Create an account or login to access this dashboard.</p>
+      <div class="auth-tabs">
+        <button id="showLoginTab" class="auth-tab active" type="button">Login</button>
+        <button id="showRegisterTab" class="auth-tab" type="button">Create Account</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <input id="loginUsername" type="text" placeholder="Username" autocomplete="username" required />
+        <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required />
+        <button class="auth-submit" type="submit">Login to Dashboard</button>
+      </form>
+
+      <form id="registerForm" class="auth-form">
+        <input id="registerUsername" type="text" placeholder="Create username" autocomplete="username" required />
+        <input id="registerPassword" type="password" placeholder="Create password" autocomplete="new-password" required />
+        <button class="auth-submit" type="submit">Create Account</button>
+      </form>
+
+      <p id="authError" class="auth-error"></p>
+      <p class="auth-hint">Password is stored in your browser local storage for demo purpose. If you open a different browser or a different URL/domain, that storage is separate.</p>
+    </div>
+  </div>
+
+  <main class="container" id="dashboardMain">
+
+    <!-- DASHBOARD INTRO CARD -->
+    <section class="card">
+      <h2>🧬 DNA Steganography Dashboard</h2>
+      <p class="muted">
+        Use the tools below to encode a secret message into DNA and hide it inside an image — or decode a stego-image to recover the hidden message.
+      </p>
+      <a class="btn btn--ghost" href="about-dna.html" style="display:inline-block; margin-top: 12px;">→ Learn About DNA Steganography</a>
+    </section>
+
+    <!-- INTERACTIVE CONVERTER SECTION -->
+    <section class="card" id="converter">
+      <h2>🔄 Interactive DNA Encoder Converter</h2>
+      <p class="muted">Enter a message to see how it converts to binary and then to DNA bases.</p>
+
+      <div class="converter-box">
+        <div class="converter-input">
+          <label for="dnaInput">Your Secret Message:</label>
+          <textarea id="dnaInput" placeholder="Type your secret message here..." maxlength="2000"></textarea>
+          <small style="color: var(--muted); font-size: 11px;">Max 2000 characters | <span id="charCount">0</span>/2000</small>
+        </div>
+
+        <div class="converter-output" id="dnaOutput" style="display: none;">
+          <div class="output-card">
+            <h4>📝 Text</h4>
+            <div class="value" id="textOutput"></div>
+          </div>
+          <div class="output-card">
+            <h4>🔢 Binary</h4>
+            <div class="value" id="binaryOutput"></div>
+          </div>
+          <div class="output-card">
+            <h4>🧬 DNA Sequence</h4>
+            <div class="value" id="dnaSequenceOutput"></div>
+          </div>
+        </div>
+      </div>
+
+      <p style="color: var(--muted); font-size: 12px; margin-top: 16px; font-style: italic;">
+        💡 <b>Tip:</b> The converter shows how each character is transformed step-by-step. 
+        Notice how the DNA sequence becomes much smaller than the original binary!
+      </p>
+    </section>
+
+    <!-- ENCODE/DECODE SYSTEM SECTION -->
+    <section class="card">
+      <h2>🔐 Automated DNA Encode/Decode with Image Steganography</h2>
+      <p class="muted">Hide DNA sequences inside images! Encode your message into DNA, then hide it in an image. Download the stego-image and share it securely.</p>
+
+      <div class="history-panel">
+        <h3 style="margin: 0; color: var(--neon2); font-size: 15px;">History (DNA Stego Page)</h3>
+        <div class="history-grid">
+          <div class="history-item">
+            <h4>Images Encoded</h4>
+            <p id="dnaEncodedCount">0</p>
+          </div>
+          <div class="history-item">
+            <h4>Images Decoded</h4>
+            <p id="dnaDecodedCount">0</p>
+          </div>
+        </div>
+        <button id="dnaHistoryResetBtn" style="margin-top: 12px; width: 100%; padding: 10px; background: rgba(22,217,255,.1); border: 1px solid rgba(22,217,255,.4); color: var(--neon2); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: var(--transition);" onmouseover="this.style.background='rgba(22,217,255,.2)';" onmouseout="this.style.background='rgba(22,217,255,.1)';">Reset DNA History</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+        <!-- ENCODE SECTION -->
+        <div class="converter-box" style="border: 1px solid rgba(26,255,122,.4);">
+          <h3 style="margin: 0 0 16px; color: var(--neon); font-size: 16px;">🔒 ENCODE</h3>
+          
+          <div class="converter-input">
+            <label for="autoEncodeMessage">Secret Message:</label>
+            <textarea id="autoEncodeMessage" placeholder="Type your secret message..." maxlength="2000" style="min-height: 70px;"></textarea>
+            <small style="color: var(--muted); font-size: 11px;">Max 2000 characters | <span id="autoEncodeCharCount">0</span>/2000</small>
+          </div>
+
+          <div class="converter-input">
+            <label for="encodeImageInput">Browse Image:</label>
+            <input type="file" id="encodeImageInput" accept="image/*" style="display: block; width: 100%; padding: 10px; background: rgba(0,0,0,.3); border: 1px solid rgba(26,255,122,.3); color: var(--text); border-radius: 8px; cursor: pointer;" />
+            <small style="color: var(--muted); font-size: 11px;">Select a PNG/JPG image to hide the DNA in</small>
+          </div>
+
+          <div class="converter-input">
+            <img id="encodePreviewImg" style="width: 100%; max-height: 120px; border-radius: 8px; display: none; border: 1px solid rgba(26,255,122,.3);" />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+            <button id="autoEncodeBtn" style="padding: 12px; background: linear-gradient(135deg, rgba(26,255,122,.2), rgba(22,217,255,.15)); border: 1px solid rgba(26,255,122,.5); color: var(--neon); border-radius: 10px; cursor: pointer; font-weight: 600; transition: var(--transition);" onmouseover="this.style.boxShadow='0 0 20px rgba(26,255,122,.2)';" onmouseout="this.style.boxShadow='none';">
+              ▶ ENCODE & HIDE IN IMAGE
+            </button>
+            <button id="autoEncodeReset" style="padding: 12px; background: rgba(255,107,107,.15); border: 1px solid rgba(255,107,107,.4); color: #ff6b6b; border-radius: 10px; cursor: pointer; font-weight: 600; transition: var(--transition);" onmouseover="this.style.background='rgba(255,107,107,.25)';" onmouseout="this.style.background='rgba(255,107,107,.15)';">
+              ↻ RESET
+            </button>
+          </div>
+
+          <div id="autoEncodeOutput" style="display: none; background: rgba(0,0,0,.2); border-radius: 10px; padding: 14px;">
+            <h4 style="margin: 0 0 8px; color: var(--neon); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">✅ DNA Hidden in Image!</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Message:</p>
+                <p style="margin: 0; color: var(--neon2); font-weight: 600; font-size: 13px;" id="autoMsgDisplay">-</p>
+              </div>
+              <div>
+                <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Payload Size:</p>
+                <p style="margin: 0; color: var(--neon2); font-weight: 600; font-size: 13px;" id="autoPayloadSize">-</p>
+              </div>
+            </div>
+
+            <button id="downloadStegoImageBtn" style="display: none; width: 100%; padding: 10px; background: rgba(26,255,122,.15); border: 1px solid rgba(26,255,122,.4); color: var(--neon); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 10px; transition: var(--transition);" onmouseover="this.style.background='rgba(26,255,122,.25)';" onmouseout="this.style.background='rgba(26,255,122,.15)';">
+              📥 DOWNLOAD STEGO IMAGE
+            </button>
+          </div>
+        </div>
+
+        <!-- DECODE SECTION -->
+        <div class="converter-box" style="border: 1px solid rgba(22,217,255,.4);">
+          <h3 style="margin: 0 0 16px; color: var(--neon2); font-size: 16px;">🔓 DECODE</h3>
+          
+          <div class="converter-input">
+            <label for="decodeImageInput">Browse Stego Image:</label>
+            <input type="file" id="decodeImageInput" accept="image/*" style="display: block; width: 100%; padding: 10px; background: rgba(0,0,0,.3); border: 1px solid rgba(22,217,255,.3); color: var(--text); border-radius: 8px; cursor: pointer;" />
+            <small style="color: var(--muted); font-size: 11px;">Select the stego-image to extract DNA from</small>
+          </div>
+
+          <div class="converter-input">
+            <img id="decodePreviewImg" style="width: 100%; max-height: 120px; border-radius: 8px; display: none; border: 1px solid rgba(22,217,255,.3);" />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+            <button id="autoDecodeBtn" style="padding: 12px; background: linear-gradient(135deg, rgba(22,217,255,.2), rgba(26,255,122,.15)); border: 1px solid rgba(22,217,255,.5); color: var(--neon2); border-radius: 10px; cursor: pointer; font-weight: 600; transition: var(--transition);" onmouseover="this.style.boxShadow='0 0 20px rgba(22,217,255,.2)';" onmouseout="this.style.boxShadow='none';">
+              ▶ EXTRACT & DECODE
+            </button>
+            <button id="autoDecodeReset" style="padding: 12px; background: rgba(255,107,107,.15); border: 1px solid rgba(255,107,107,.4); color: #ff6b6b; border-radius: 10px; cursor: pointer; font-weight: 600; transition: var(--transition);" onmouseover="this.style.background='rgba(255,107,107,.25)';" onmouseout="this.style.background='rgba(255,107,107,.15)';">
+              ↻ RESET
+            </button>
+          </div>
+
+          <div id="autoDecodeOutput" style="display: none; background: rgba(0,0,0,.2); border-radius: 10px; padding: 14px;">
+            <h4 style="margin: 0 0 12px; color: var(--neon2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">✅ Hidden Message Extracted:</h4>
+            <div id="autoDecodedMessage" style="background: rgba(0,0,0,.3); padding: 12px; border-radius: 8px; color: var(--text); font-size: 15px; line-height: 1.6; border-left: 3px solid var(--neon2); min-height: 50px; display: flex; align-items: center; font-weight: 500;"></div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+              <div>
+                <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Characters:</p>
+                <p style="margin: 0; color: var(--neon2); font-weight: 600; font-size: 13px;" id="autoExtractedChars">0</p>
+              </div>
+              <div>
+                <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Bits Extracted:</p>
+                <p style="margin: 0; color: var(--neon2); font-weight: 600; font-size: 13px;" id="autoExtractedBits">0</p>
+              </div>
+            </div>
+
+            <button id="copyAutoDecodedBtn" style="width: 100%; padding: 8px; background: rgba(22,217,255,.1); border: 1px solid rgba(22,217,255,.4); color: var(--neon2); border-radius: 8px; cursor: pointer; font-size: 12px; margin-top: 12px; transition: var(--transition);" onmouseover="this.style.background='rgba(22,217,255,.2)';" onmouseout="this.style.background='rgba(22,217,255,.1)';">
+              📋 Copy Message
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fact-box" style="margin-top: 24px;">
+        <strong>🖼️ Image-Based DNA Steganography:</strong> The system automatically generates a DNA carrier, embeds your message using LSB steganography, then hides the DNA sequence inside the pixels of your image. The image looks identical to the naked eye but contains hidden DNA data in the least significant bits of pixel values!
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="dashboardFooter">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__title">🧬 DNA Steganography Topics</div>
+        <ul class="footer__links">
+          <li>DNA structure and nucleotide bases</li>
+          <li>Binary to DNA encoding schemes</li>
+          <li>DNA synthesis and sequencing</li>
+          <li>Bioinformatics & cryptography</li>
+          <li>Emerging biotech applications</li>
+        </ul>
+      </div>
+      <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity | DNA Edition</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Local authentication for dashboard access
+    const ACCOUNTS_KEY = 'dnaStegoAccounts';
+    const ACTIVE_USER_KEY = 'dnaStegoActiveUser';
+
+    const authGate = document.getElementById('authGate');
+    const authError = document.getElementById('authError');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const showLoginTab = document.getElementById('showLoginTab');
+    const showRegisterTab = document.getElementById('showRegisterTab');
+    const authUserLabel = document.getElementById('authUserLabel');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const dnaEncodedCount = document.getElementById('dnaEncodedCount');
+    const dnaDecodedCount = document.getElementById('dnaDecodedCount');
+    const dnaHistoryResetBtn = document.getElementById('dnaHistoryResetBtn');
+
+    const STEGO_HISTORY_KEY = 'stegoHistory';
+
+    function getHistory() {
+      const fallback = { dna: { encoded: 0, decoded: 0 }, demo: { encoded: 0, decoded: 0 } };
+      try {
+        const raw = localStorage.getItem(STEGO_HISTORY_KEY);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return {
+          dna: {
+            encoded: Number(parsed?.dna?.encoded || 0),
+            decoded: Number(parsed?.dna?.decoded || 0)
+          },
+          demo: {
+            encoded: Number(parsed?.demo?.encoded || 0),
+            decoded: Number(parsed?.demo?.decoded || 0)
+          }
+        };
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem(STEGO_HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function renderDnaHistory() {
+      const history = getHistory();
+      dnaEncodedCount.textContent = String(history.dna.encoded);
+      dnaDecodedCount.textContent = String(history.dna.decoded);
+    }
+
+    function incrementDnaHistory(type) {
+      const history = getHistory();
+      history.dna[type] += 1;
+      saveHistory(history);
+      renderDnaHistory();
+    }
+
+    function normalizeUsername(username) {
+      return String(username || '').trim().toLowerCase();
+    }
+
+    function getAccounts() {
+      try {
+        const raw = localStorage.getItem(ACCOUNTS_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          return {};
+        }
+        return parsed;
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    }
+
+    function findAccountKey(accounts, usernameInput) {
+      const normalizedInput = normalizeUsername(usernameInput);
+      if (!normalizedInput) return null;
+
+      const keys = Object.keys(accounts);
+      for (let i = 0; i < keys.length; i++) {
+        if (normalizeUsername(keys[i]) === normalizedInput) {
+          return keys[i];
+        }
+      }
+      return null;
+    }
+
+    function setAuthView(mode) {
+      const loginMode = mode === 'login';
+      showLoginTab.classList.toggle('active', loginMode);
+      showRegisterTab.classList.toggle('active', !loginMode);
+      loginForm.classList.toggle('active', loginMode);
+      registerForm.classList.toggle('active', !loginMode);
+      authError.textContent = '';
+    }
+
+    function lockDashboard() {
+      document.body.classList.add('locked');
+      authGate.style.display = 'flex';
+      authUserLabel.textContent = '';
+      logoutBtn.style.display = 'none';
+    }
+
+    function unlockDashboard(username) {
+      document.body.classList.remove('locked');
+      authGate.style.display = 'none';
+      authUserLabel.textContent = 'User: ' + username;
+      logoutBtn.style.display = 'inline-block';
+    }
+
+    function initializeAuth() {
+      const activeUser = localStorage.getItem(ACTIVE_USER_KEY);
+      if (activeUser) {
+        unlockDashboard(activeUser);
+      } else {
+        lockDashboard();
+      }
+    }
+
+    showLoginTab.addEventListener('click', () => setAuthView('login'));
+    showRegisterTab.addEventListener('click', () => setAuthView('register'));
+
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const usernameRaw = document.getElementById('registerUsername').value;
+      const passwordRaw = document.getElementById('registerPassword').value;
+      const username = usernameRaw.trim();
+      const password = passwordRaw.trim();
+
+      if (username.length < 3) {
+        authError.textContent = 'Username must be at least 3 characters.';
+        return;
+      }
+      if (password.length < 4) {
+        authError.textContent = 'Password must be at least 4 characters.';
+        return;
+      }
+
+      const accounts = getAccounts();
+      if (findAccountKey(accounts, username)) {
+        authError.textContent = 'Username already exists. Please login.';
+        return;
+      }
+
+      accounts[normalizeUsername(username)] = password;
+      saveAccounts(accounts);
+      localStorage.setItem(ACTIVE_USER_KEY, username);
+      unlockDashboard(username);
+      registerForm.reset();
+      authError.textContent = '';
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const usernameRaw = document.getElementById('loginUsername').value;
+      const passwordRaw = document.getElementById('loginPassword').value;
+      const username = usernameRaw.trim();
+      const password = passwordRaw.trim();
+      const accounts = getAccounts();
+      const matchedKey = findAccountKey(accounts, username);
+
+      if (!matchedKey) {
+        authError.textContent = 'Invalid username or password.';
+        return;
+      }
+
+      const storedPassword = String(accounts[matchedKey] || '');
+      const passwordMatches = storedPassword === password || storedPassword.trim() === password;
+
+      if (!passwordMatches) {
+        authError.textContent = 'Invalid username or password.';
+        return;
+      }
+
+      localStorage.setItem(ACTIVE_USER_KEY, matchedKey);
+      unlockDashboard(matchedKey);
+      loginForm.reset();
+      authError.textContent = '';
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem(ACTIVE_USER_KEY);
+      lockDashboard();
+      setAuthView('login');
+    });
+
+    initializeAuth();
+    renderDnaHistory();
+
+    dnaHistoryResetBtn.addEventListener('click', () => {
+      const history = getHistory();
+      history.dna.encoded = 0;
+      history.dna.decoded = 0;
+      saveHistory(history);
+      renderDnaHistory();
+    });
+
+    // DNA Converter Logic
+    const dnaInput = document.getElementById('dnaInput');
+    const charCount = document.getElementById('charCount');
+    const dnaOutput = document.getElementById('dnaOutput');
+    const textOutput = document.getElementById('textOutput');
+    const binaryOutput = document.getElementById('binaryOutput');
+    const dnaSequenceOutput = document.getElementById('dnaSequenceOutput');
+
+    // Mapping: 00=A, 01=C, 10=G, 11=T
+    const binaryToBase = {
+      '00': 'A',
+      '01': 'C',
+      '10': 'G',
+      '11': 'T'
+    };
+
+    function textToBinary(text) {
+      return text.split('').map(char => {
+        return char.charCodeAt(0).toString(2).padStart(8, '0');
+      }).join('');
+    }
+
+    function binaryToDNA(binary) {
+      let dna = '';
+      for (let i = 0; i < binary.length; i += 2) {
+        const pair = binary.substr(i, 2);
+        dna += binaryToBase[pair] || '';
+      }
+      return dna;
+    }
+    
+    function dnaToText(dnaSequence) {
+      // DNA bases to binary: A=00, C=01, G=10, T=11
+      let binary = '';
+      for (let i = 0; i < dnaSequence.length; i++) {
+        const base = dnaSequence[i];
+        if (base === 'A') binary += '00';
+        else if (base === 'C') binary += '01';
+        else if (base === 'G') binary += '10';
+        else if (base === 'T') binary += '11';
+      }
+      return binary;
+    }
+
+    function updateConverter() {
+      const text = dnaInput.value;
+      charCount.textContent = text.length;
+
+      if (text.length === 0) {
+        dnaOutput.style.display = 'none';
+        return;
+      }
+
+      const binary = textToBinary(text);
+      const dnaSeq = binaryToDNA(binary);
+
+      textOutput.textContent = text;
+      binaryOutput.textContent = binary;
+      dnaSequenceOutput.textContent = dnaSeq;
+      dnaOutput.style.display = 'grid';
+    }
+
+    dnaInput.addEventListener('input', updateConverter);
+
+    // ============================================
+    // AUTOMATED IMAGE-BASED DNA ENCODE/DECODE
+    // ============================================
+
+    const STEGO_MAGIC_BITS = textToBinary('DNA1');
+
+    function dnaToBinary(dnaSequence) {
+      let binary = '';
+      for (let i = 0; i < dnaSequence.length; i++) {
+        const base = dnaSequence[i];
+        if (base === 'A') binary += '00';
+        else if (base === 'C') binary += '01';
+        else if (base === 'G') binary += '10';
+        else if (base === 'T') binary += '11';
+      }
+      return binary;
+    }
+
+    function binaryToText(binary) {
+      let text = '';
+      for (let i = 0; i + 7 < binary.length; i += 8) {
+        text += String.fromCharCode(parseInt(binary.substring(i, i + 8), 2));
+      }
+      return text;
+    }
+
+    function writeBitsToPixels(pixels, bits) {
+      let bitIndex = 0;
+      for (let i = 0; i < pixels.length && bitIndex < bits.length; i += 4) {
+        for (let channel = 0; channel < 3 && bitIndex < bits.length; channel++) {
+          const bit = bits.charCodeAt(bitIndex) - 48;
+          pixels[i + channel] = (pixels[i + channel] & 0xFE) | bit;
+          bitIndex++;
+        }
+      }
+    }
+
+    function readBitsFromPixels(pixels, bitCount) {
+      let bits = '';
+      for (let i = 0; i < pixels.length && bits.length < bitCount; i += 4) {
+        for (let channel = 0; channel < 3 && bits.length < bitCount; channel++) {
+          bits += (pixels[i + channel] & 1).toString();
+        }
+      }
+      return bits;
+    }
+
+    // Image preview for encoder
+    document.getElementById('encodeImageInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = document.getElementById('encodePreviewImg');
+          img.src = evt.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Image preview for decoder
+    document.getElementById('decodeImageInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = document.getElementById('decodePreviewImg');
+          img.src = evt.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Encode: Message -> DNA -> Hide in image pixels
+    function autoEncode() {
+      const message = document.getElementById('autoEncodeMessage').value.trim();
+      const imageFile = document.getElementById('encodeImageInput').files[0];
+      
+      if (!message) {
+        alert('❌ Please enter a secret message');
+        return;
+      }
+      
+      if (!imageFile) {
+        alert('❌ Please select an image');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+
+            // Convert message to DNA payload
+            const messageBinary = textToBinary(message);
+            const dnaSequence = binaryToDNA(messageBinary);
+            const dnaLengthBits = dnaSequence.length.toString(2).padStart(16, '0');
+            const dnaDataBits = dnaToBinary(dnaSequence);
+            const payloadBits = STEGO_MAGIC_BITS + dnaLengthBits + dnaDataBits;
+
+            // Capacity uses RGB channels only (3 bits per pixel)
+            const capacityBits = canvas.width * canvas.height * 3;
+            if (payloadBits.length > capacityBits) {
+              alert('❌ Image too small! Need at least ' + Math.ceil(payloadBits.length / 3) + ' pixels.');
+              return;
+            }
+
+            writeBitsToPixels(pixels, payloadBits);
+
+            ctx.putImageData(imageData, 0, 0);
+
+            // Display results
+            document.getElementById('autoMsgDisplay').textContent = `"${message}"`;
+            document.getElementById('autoPayloadSize').textContent = `${dnaSequence.length} DNA bases (${payloadBits.length} bits)`;
+            document.getElementById('autoEncodeOutput').style.display = 'block';
+            document.getElementById('downloadStegoImageBtn').style.display = 'block';
+            incrementDnaHistory('encoded');
+
+            // Setup download button
+            document.getElementById('downloadStegoImageBtn').onclick = () => {
+              const link = document.createElement('a');
+              link.href = canvas.toDataURL('image/png');
+              link.download = 'stego-image.png';
+              link.click();
+            };
+          } catch (err) {
+            alert('❌ Error encoding: ' + err.message);
+            console.error('Encode error:', err);
+          }
+        };
+        
+        img.onerror = function() {
+          alert('❌ Failed to load image. Please try a different image.');
+        };
+        
+        img.src = e.target.result;
+      };
+      
+      reader.onerror = function() {
+        alert('❌ Failed to read file. Please try again.');
+      };
+      
+      reader.readAsDataURL(imageFile);
+    }
+
+    // Decode: Extract hidden DNA payload and recover message
+    function autoDecode() {
+      const imageFile = document.getElementById('decodeImageInput').files[0];
+
+      if (!imageFile) {
+        alert('❌ Please select a stego-image');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+
+            const minimumHeaderBits = 48; // 32 bits magic + 16 bits DNA length
+            const headerBits = readBitsFromPixels(pixels, minimumHeaderBits);
+            if (headerBits.length < minimumHeaderBits) {
+              alert('❌ Image is too small or does not contain encoded data.');
+              return;
+            }
+
+            const magicBits = headerBits.substring(0, 32);
+            if (magicBits !== STEGO_MAGIC_BITS) {
+              alert('❌ No valid hidden DNA data found in this image.');
+              return;
+            }
+
+            const dnaLength = parseInt(headerBits.substring(32, 48), 2);
+            if (!Number.isFinite(dnaLength) || dnaLength <= 0) {
+              alert('❌ Corrupted DNA length header.');
+              return;
+            }
+
+            const requiredBits = 48 + (dnaLength * 2);
+            const capacityBits = canvas.width * canvas.height * 3;
+            if (requiredBits > capacityBits) {
+              alert('❌ Not enough data in image');
+              return;
+            }
+
+            const allBits = readBitsFromPixels(pixels, requiredBits);
+            const dnaBits = allBits.substring(48, requiredBits);
+            
+            // Convert DNA bits back to DNA sequence
+            let dnaSequence = '';
+            for (let i = 0; i < dnaBits.length; i += 2) {
+              const pair = dnaBits.substring(i, i + 2);
+              if (pair === '00') dnaSequence += 'A';
+              else if (pair === '01') dnaSequence += 'C';
+              else if (pair === '10') dnaSequence += 'G';
+              else if (pair === '11') dnaSequence += 'T';
+            }
+            
+            // Convert DNA back to message text
+            const messageBinary = dnaToBinary(dnaSequence);
+            const message = binaryToText(messageBinary);
+
+            // Display results
+            if (message && message.length > 0) {
+              document.getElementById('autoDecodedMessage').textContent = `"${message}"`;
+              document.getElementById('autoExtractedBits').textContent = dnaSequence.length + ' DNA bases';
+              document.getElementById('autoExtractedChars').textContent = message.length;
+              document.getElementById('autoDecodeOutput').style.display = 'block';
+              incrementDnaHistory('decoded');
+
+              // Setup copy button
+              document.getElementById('copyAutoDecodedBtn').onclick = () => {
+                navigator.clipboard.writeText(message);
+                const btn = document.getElementById('copyAutoDecodedBtn');
+                const original = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = original, 2000);
+              };
+            } else {
+              alert('❌ Could not extract message from image');
+            }
+          } catch (err) {
+            alert('❌ Error decoding: ' + err.message);
+            console.error('Decode error:', err);
+          }
+        };
+        
+        img.onerror = function() {
+          alert('❌ Failed to load image. Please try a different image.');
+        };
+        
+        img.src = e.target.result;
+      };
+      
+      reader.onerror = function() {
+        alert('❌ Failed to read file. Please try again.');
+      };
+      
+      reader.readAsDataURL(imageFile);
+    }
+
+    // Character count in encoder
+    document.getElementById('autoEncodeMessage').addEventListener('input', (e) => {
+      document.getElementById('autoEncodeCharCount').textContent = e.target.value.length;
+    });
+
+    // Event listeners for buttons
+    function resetEncoder() {
+      document.getElementById('autoEncodeMessage').value = '';
+      document.getElementById('autoEncodeCharCount').textContent = '0';
+      document.getElementById('encodeImageInput').value = '';
+      document.getElementById('encodePreviewImg').src = '';
+      document.getElementById('encodePreviewImg').style.display = 'none';
+      document.getElementById('autoEncodeOutput').style.display = 'none';
+      document.getElementById('downloadStegoImageBtn').style.display = 'none';
+      window.stegoCanvas = null;
+    }
+
+    function resetDecoder() {
+      document.getElementById('decodeImageInput').value = '';
+      document.getElementById('decodePreviewImg').src = '';
+      document.getElementById('decodePreviewImg').style.display = 'none';
+      document.getElementById('autoDecodeOutput').style.display = 'none';
+      document.getElementById('autoDecodedMessage').textContent = '';
+      document.getElementById('autoExtractedChars').textContent = '0';
+      document.getElementById('autoExtractedBits').textContent = '0';
+    }
+
+    document.getElementById('autoEncodeBtn').addEventListener('click', autoEncode);
+    document.getElementById('autoEncodeReset').addEventListener('click', resetEncoder);
+    document.getElementById('autoDecodeBtn').addEventListener('click', autoDecode);
+    document.getElementById('autoDecodeReset').addEventListener('click', resetDecoder);
+
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

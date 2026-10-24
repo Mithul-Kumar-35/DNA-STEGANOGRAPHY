@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How Steganography Works – Steganography in Cybersecurity</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">STEGO//CYBER</a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="how.html">How it Works</a>
+      <a href="applications.html">Applications</a>
+      <a href="about-dna.html">About DNA Stego</a>
+      <a href="dna.html">DNA Stego</a>
+      <a href="demo.html">Image Stego</a>
+      <a href="conclusion.html">Conclusion</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>How Steganography Works</h2>
+      <p class="muted">
+        Steganography hides data inside a “cover” medium so that changes are visually or audibly subtle.
+        Common carriers are images, audio, video, and even formatted text.
+      </p>
+      <div class="cards4">
+        <article class="mini">
+          <h3>Image steganography</h3>
+          <p>Commonly uses <b>LSB (Least Significant Bit)</b> changes in pixel channels to store bits with minimal visual impact.</p>
+        </article>
+        <article class="mini">
+          <h3>Audio steganography</h3>
+          <p>Embeds data in low-impact signal components (LSB, phase coding, spread spectrum) while preserving perceived sound.</p>
+        </article>
+        <article class="mini">
+          <h3>Video steganography</h3>
+          <p>Like image stego across many frames; can also use motion vectors or transform-domain methods.</p>
+        </article>
+        <article class="mini">
+          <h3>Text steganography</h3>
+          <p>Uses whitespace, punctuation patterns, synonym substitution, or formatting—typically lower capacity than media carriers.</p>
+        </article>
+      </div>
+
+      <div class="diagram">
+        <div class="diagram__node">Cover Image</div>
+        <div class="diagram__arrow">+</div>
+        <div class="diagram__node">Secret Message</div>
+        <div class="diagram__arrow">→</div>
+        <div class="diagram__node diagram__node--accent">Stego Image</div>
+        <div class="diagram__foot">Idea: embed bits into LSBs so changes are hard to notice.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__title">References & Resources</div>
+        <ul class="footer__links">
+          <li>LSB Steganography (concept)</li>
+          <li>Steganalysis: chi-square / RS analysis (concepts)</li>
+          <li>Tools: Steghide, OpenStego, zsteg, binwalk</li>
+        </ul>
+      </div>
+      <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About Steganography – Steganography in Cybersecurity</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">STEGO//CYBER</a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="how.html">How it Works</a>
+      <a href="applications.html">Applications</a>
+      <a href="about-dna.html">About DNA Stego</a>
+      <a href="dna.html">DNA Stego</a>
+      <a href="demo.html">Image Stego</a>
+      <a href="conclusion.html">Conclusion</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>About Steganography</h2>
+      <p><b>Definition:</b> Steganography hides the <i>existence</i> of a message by embedding it in a “cover” medium (image, audio, video, text).</p>
+      <p><b>History:</b> From ancient hidden ink and shaved-head messages to modern digital LSB methods and watermarking.</p>
+      <p><b>Why it matters:</b> It enables covert channels (good: privacy, watermarking; bad: malware exfiltration), making it a key cybersecurity topic.</p>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <h3>Core Concepts</h3>
+        <ul class="bullets">
+          <li><span class="icon">⌁</span><b>Cover:</b> the innocent-looking file.</li>
+          <li><span class="icon">⌁</span><b>Payload:</b> the hidden message/data.</li>
+          <li><span class="icon">⌁</span><b>Stego object:</b> cover + payload combined.</li>
+          <li><span class="icon">⌁</span><b>Key (optional):</b> controls embedding/extraction.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Steganography in Cybersecurity</h3>
+        <p class="muted">
+          In modern environments, steganography is used both for <b>defense</b> (watermarking, tamper detection)
+          and <b>attack</b> (covert channels, data exfiltration). Understanding it helps defenders detect hidden
+          signals inside “normal” traffic.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__title">References & Resources</div>
+        <ul class="footer__links">
+          <li>LSB Steganography (concept)</li>
+          <li>Steganalysis: chi-square / RS analysis (concepts)</li>
+          <li>Tools: Steghide, OpenStego, zsteg, binwalk</li>
+        </ul>
+      </div>
+      <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

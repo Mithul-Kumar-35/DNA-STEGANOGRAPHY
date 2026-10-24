@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Steganography in Cybersecurity: Hidden Data Communication. Learn LSB encoding, steganalysis, and covert channels." />
+  <meta name="theme-color" content="#05070b" />
+  <title>Steganography in Cybersecurity </title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">STEGO//CYBER</a>
+    <nav class="nav">
+      <a href="about.html">About</a>
+      <a href="how.html">How it Works</a>
+      <a href="applications.html">Applications</a>
+      <a href="about-dna.html">About DNA Stego</a>
+      <a href="dna.html">DNA Stego</a>
+      <a href="demo.html">Image Stego</a>
+      <a href="conclusion.html">Conclusion</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HOME HERO -->
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="kicker">✦ Steganography in Cybersecurity ✦</p>
+        <h1>Hiding Data in Plain Sight</h1>
+        <p class="lead">
+          Steganography is the art of concealed communication—embedding secret data inside ordinary files
+          so the message exists without drawing attention. Master the art of invisible payloads.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="about.html">→ Learn Steganography</a>
+          <a class="btn btn--ghost" href="demo.html">▶ Try Image Stego</a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat"><span class="stat__label">Goal</span><span class="stat__value">Invisible Payload</span></div>
+          <div class="stat"><span class="stat__label">Common Carrier</span><span class="stat__value">Images / Audio</span></div>
+          <div class="stat"><span class="stat__label">Focus</span><span class="stat__value">Covertness</span></div>
+        </div>
+      </div>
+      <div class="hero__panel">
+        <div class="terminalCard">
+          <div class="terminalCard__bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminalCard__title">stego-scanner.log</span>
+          </div>
+          <pre class="terminalCard__body"
+>$ analyze --carrier image.png
+[+] entropy: 7.245 bits/pixel
+[+] histogram: normal
+[+] lsb-pattern: detected ⚠
+[>] payload-size: estimating...<span class="blink">█</span>
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY CONCEPTS -->
+    <section class="card">
+      <h2>Why Steganography Matters in Cybersecurity</h2>
+      <p>
+        In modern threat landscapes, steganography is a <strong>double-edged sword</strong>. Organizations use it for:
+      </p>
+      <ul class="bullets">
+        <li><span class="icon">🔐</span> <strong>Digital Watermarking:</strong> Protecting intellectual property and authentication</li>
+        <li><span class="icon">🛡️</span> <strong>Covert Communication:</strong> Secure channels in high-threat environments</li>
+        <li><span class="icon">⚠️</span> <strong>Threat Detection:</strong> Identifying unauthorized data exfiltration attempts</li>
+        <li><span class="icon">📊</span> <strong>Steganalysis:</strong> Statistical analysis to detect hidden messages</li>
+      </ul>
+      <p class="muted" style="margin-top: 16px; font-style: italic;">
+        Understanding steganography is essential for both defenders who need to detect covert channels 
+        and security professionals who implement privacy-preserving technologies.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__title">🔧 Technologies & Tools</div>
+        <ul class="footer__links">
+          <li>LSB Steganography algorithms</li>
+          <li>Steganalysis: chi-square & RS analysis</li>
+          <li>Tools: Steghide, OpenStego, zsteg, binwalk</li>
+          <li>Web Canvas & HTML5 APIs</li>
+        </ul>
+      </div>
+      <div class="footer__meta">© <span id="year"></span> Steganography in Cybersecurity | Educational Resource</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
