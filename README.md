@@ -20,7 +20,7 @@ The project also includes educational pages about DNA steganography, how stegano
 
 ## Run the project
 
-### VS Code Live Server
+### VS Code Live Server 
 
 1. Open this project folder in VS Code.
 2. Install the **Live Server** extension if you don’t already have it.
