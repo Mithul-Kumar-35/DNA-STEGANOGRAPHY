@@ -45,7 +45,7 @@ The project also includes educational pages about DNA steganography, how stegano
 - `how.html`, `applications.html`, `about.html`, and `conclusion.html` — Educational pages
 - `styles.css` and `app.js` — Shared styling and page behavior
 
-## Important limitations
+## Important Future Enhancements 
 
 This is an educational demonstration. It uses an image as the carrier; it does not synthesize, store, or sequence physical DNA.
 
