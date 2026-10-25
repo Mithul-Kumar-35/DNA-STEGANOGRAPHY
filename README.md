@@ -60,4 +60,4 @@ The current text-to-binary conversion is intended for basic ASCII text. Unicode 
 - HTML
 - CSS
 - JavaScript
-- HTML Canvas and browser file APIs
+- HTML Canvas and browser file APIs 
