@@ -1,6 +1,6 @@
 # DNA Steganography
 
-An educational web project that demonstrates how a text message can be represented as a DNA sequence and hidden inside an image.
+An educational Cyber web project that demonstrates how a text message can be represented as a DNA sequence and hidden inside an image.
 
 ## How it works
 
