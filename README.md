@@ -12,7 +12,7 @@ The DNA Steganography page demonstrates this process:
    - `01` → `C`
    - `10` → `G`
    - `11` → `T`
-3. Convert the DNA sequence back into bits.
+3. Convert the DNA sequence back into bits. 
 4. Store those bits in the least significant bits of an image’s RGB pixel values.
 5. Read the hidden bits from the image and convert them back into the message.
 
