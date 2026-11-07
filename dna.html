@@ -389,7 +389,7 @@
       </div>
 
       <p style="color: var(--muted); font-size: 12px; margin-top: 16px; font-style: italic;">
-        💡 <b>Tip:</b> The converter shows how each character is transformed step-by-step. 
+        💡 <b>Tip:</b> The converter shows how each character is transformed step-by-step.
         Notice how the DNA sequence becomes much smaller than the original binary!
       </p>
     </section>
@@ -418,7 +418,7 @@
         <!-- ENCODE SECTION -->
         <div class="converter-box" style="border: 1px solid rgba(26,255,122,.4);">
           <h3 style="margin: 0 0 16px; color: var(--neon); font-size: 16px;">🔒 ENCODE</h3>
-          
+
           <div class="converter-input">
             <label for="autoEncodeMessage">Secret Message:</label>
             <textarea id="autoEncodeMessage" placeholder="Type your secret message..." maxlength="2000" style="min-height: 70px;"></textarea>
@@ -446,7 +446,7 @@
 
           <div id="autoEncodeOutput" style="display: none; background: rgba(0,0,0,.2); border-radius: 10px; padding: 14px;">
             <h4 style="margin: 0 0 8px; color: var(--neon); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">✅ DNA Hidden in Image!</h4>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div>
                 <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Message:</p>
@@ -467,7 +467,7 @@
         <!-- DECODE SECTION -->
         <div class="converter-box" style="border: 1px solid rgba(22,217,255,.4);">
           <h3 style="margin: 0 0 16px; color: var(--neon2); font-size: 16px;">🔓 DECODE</h3>
-          
+
           <div class="converter-input">
             <label for="decodeImageInput">Browse Stego Image:</label>
             <input type="file" id="decodeImageInput" accept="image/*" style="display: block; width: 100%; padding: 10px; background: rgba(0,0,0,.3); border: 1px solid rgba(22,217,255,.3); color: var(--text); border-radius: 8px; cursor: pointer;" />
@@ -490,7 +490,7 @@
           <div id="autoDecodeOutput" style="display: none; background: rgba(0,0,0,.2); border-radius: 10px; padding: 14px;">
             <h4 style="margin: 0 0 12px; color: var(--neon2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">✅ Hidden Message Extracted:</h4>
             <div id="autoDecodedMessage" style="background: rgba(0,0,0,.3); padding: 12px; border-radius: 8px; color: var(--text); font-size: 15px; line-height: 1.6; border-left: 3px solid var(--neon2); min-height: 50px; display: flex; align-items: center; font-weight: 500;"></div>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
               <div>
                 <p style="margin: 0 0 6px; color: var(--muted); font-size: 10px; text-transform: uppercase;">Characters:</p>
@@ -665,7 +665,7 @@
       const usernameRaw = document.getElementById('registerUsername').value;
       const passwordRaw = document.getElementById('registerPassword').value;
       const username = usernameRaw.trim();
-      const password = passwordRaw.trim();
+      const password = passwordRaw;
 
       if (username.length < 3) {
         authError.textContent = 'Username must be at least 3 characters.';
@@ -695,7 +695,7 @@
       const usernameRaw = document.getElementById('loginUsername').value;
       const passwordRaw = document.getElementById('loginPassword').value;
       const username = usernameRaw.trim();
-      const password = passwordRaw.trim();
+      const password = passwordRaw;
       const accounts = getAccounts();
       const matchedKey = findAccountKey(accounts, username);
 
@@ -752,9 +752,9 @@
     };
 
     function textToBinary(text) {
-      return text.split('').map(char => {
-        return char.charCodeAt(0).toString(2).padStart(8, '0');
-      }).join('');
+      return Array.from(new TextEncoder().encode(text), byte =>
+        byte.toString(2).padStart(8, '0')
+      ).join('');
     }
 
     function binaryToDNA(binary) {
@@ -765,7 +765,7 @@
       }
       return dna;
     }
-    
+
     function dnaToText(dnaSequence) {
       // DNA bases to binary: A=00, C=01, G=10, T=11
       let binary = '';
@@ -818,11 +818,11 @@
     }
 
     function binaryToText(binary) {
-      let text = '';
-      for (let i = 0; i + 7 < binary.length; i += 8) {
-        text += String.fromCharCode(parseInt(binary.substring(i, i + 8), 2));
+      const bytes = new Uint8Array(Math.floor(binary.length / 8));
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(binary.substring(i * 8, i * 8 + 8), 2);
       }
-      return text;
+      return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
     }
 
     function writeBitsToPixels(pixels, bits) {
@@ -876,14 +876,14 @@
 
     // Encode: Message -> DNA -> Hide in image pixels
     function autoEncode() {
-      const message = document.getElementById('autoEncodeMessage').value.trim();
+      const message = document.getElementById('autoEncodeMessage').value;
       const imageFile = document.getElementById('encodeImageInput').files[0];
-      
-      if (!message) {
+
+      if (message.length === 0) {
         alert('❌ Please enter a secret message');
         return;
       }
-      
+
       if (!imageFile) {
         alert('❌ Please select an image');
         return;
@@ -899,7 +899,7 @@
             canvas.height = img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
-            
+
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = imageData.data;
 
@@ -940,18 +940,18 @@
             console.error('Encode error:', err);
           }
         };
-        
+
         img.onerror = function() {
           alert('❌ Failed to load image. Please try a different image.');
         };
-        
+
         img.src = e.target.result;
       };
-      
+
       reader.onerror = function() {
         alert('❌ Failed to read file. Please try again.');
       };
-      
+
       reader.readAsDataURL(imageFile);
     }
 
@@ -974,7 +974,7 @@
             canvas.height = img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
-            
+
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = imageData.data;
 
@@ -1006,7 +1006,7 @@
 
             const allBits = readBitsFromPixels(pixels, requiredBits);
             const dnaBits = allBits.substring(48, requiredBits);
-            
+
             // Convert DNA bits back to DNA sequence
             let dnaSequence = '';
             for (let i = 0; i < dnaBits.length; i += 2) {
@@ -1016,7 +1016,7 @@
               else if (pair === '10') dnaSequence += 'G';
               else if (pair === '11') dnaSequence += 'T';
             }
-            
+
             // Convert DNA back to message text
             const messageBinary = dnaToBinary(dnaSequence);
             const message = binaryToText(messageBinary);
@@ -1045,18 +1045,18 @@
             console.error('Decode error:', err);
           }
         };
-        
+
         img.onerror = function() {
           alert('❌ Failed to load image. Please try a different image.');
         };
-        
+
         img.src = e.target.result;
       };
-      
+
       reader.onerror = function() {
         alert('❌ Failed to read file. Please try again.');
       };
-      
+
       reader.readAsDataURL(imageFile);
     }
 

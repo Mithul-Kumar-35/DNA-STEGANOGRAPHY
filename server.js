@@ -81,7 +81,10 @@ function hashPassword(password, saltHex) {
 function verifyPassword(password, userRecord) {
   if (!userRecord || !userRecord.salt || !userRecord.hash) return false;
   const { hash } = hashPassword(password, userRecord.salt);
-  return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(userRecord.hash, 'hex'));
+  const actual = Buffer.from(hash, 'hex');
+  const expected = Buffer.from(userRecord.hash, 'hex');
+  if (actual.length !== expected.length) return false;
+  return crypto.timingSafeEqual(actual, expected);
 }
 
 function createSession(username) {

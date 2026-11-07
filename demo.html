@@ -13,7 +13,7 @@
             gap: 24px;
             margin-top: 24px;
         }
-        
+
         .section {
             background: linear-gradient(180deg, rgba(7,24,38,.62), rgba(0,0,0,.14));
             padding: 24px;
@@ -26,24 +26,24 @@
         .section:nth-child(2) {
             animation-delay: 0.2s;
         }
-        
+
         .section:hover {
             transform: translateY(-5px);
             border-color: rgba(26,255,122,.5);
             box-shadow: 0 30px 80px rgba(26,255,122,.1);
         }
-        
+
         .section h3 {
             color: var(--neon2);
             margin-top: 0;
             margin-bottom: 18px;
             font-size: 18px;
         }
-        
+
         .form-group {
             margin-bottom: 18px;
         }
-        
+
         label {
             display: block;
             color: var(--text);
@@ -53,7 +53,7 @@
             letter-spacing: 0.05em;
             text-transform: uppercase;
         }
-        
+
         input[type="file"],
         textarea,
         input[type="text"] {
@@ -75,12 +75,12 @@
             box-shadow: 0 0 0 4px rgba(26,255,122,.1);
             outline: none;
         }
-        
+
         textarea {
             resize: vertical;
             min-height: 100px;
         }
-        
+
         input[type="file"]::file-selector-button {
             background: linear-gradient(135deg, rgba(26,255,122,.22), rgba(22,217,255,.10));
             color: var(--text);
@@ -91,12 +91,12 @@
             font-weight: 700;
             transition: var(--transition);
         }
-        
+
         input[type="file"]::file-selector-button:hover {
             background: linear-gradient(135deg, rgba(26,255,122,.35), rgba(22,217,255,.2));
             box-shadow: 0 0 20px rgba(26,255,122,.2);
         }
-        
+
         .output-box {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(26, 255, 122, 0.4);
@@ -116,7 +116,7 @@
             border-color: rgba(26,255,122,.6);
             background: rgba(0, 0, 0, 0.65);
         }
-        
+
         .canvas-preview {
             width: 100%;
             border: 1px solid rgba(26, 255, 122, 0.3);
@@ -131,7 +131,7 @@
             border-color: rgba(26,255,122,.5);
             box-shadow: 0 0 20px rgba(26,255,122,.1);
         }
-        
+
         .status {
             margin-top: 16px;
             padding: 12px 14px;
@@ -141,13 +141,13 @@
             text-align: center;
             animation: slideInUp 0.4s ease-out;
         }
-        
+
         .status.success {
             background: rgba(26, 255, 122, 0.15);
             color: var(--neon);
             border: 1px solid rgba(26,255,122,.5);
         }
-        
+
         .status.error {
             background: rgba(255, 100, 100, 0.15);
             color: #ff6464;
@@ -252,7 +252,7 @@
             margin-top: 0;
             color: var(--neon2);
         }
-        
+
         @media (max-width: 900px) {
             .demo-container {
                 grid-template-columns: 1fr;
@@ -272,7 +272,7 @@
 </head>
 <body>
     <canvas id="bg" aria-hidden="true"></canvas>
-    
+
     <header class="topbar">
         <a class="brand" href="index.html">STEGO//CYBER</a>
         <nav class="nav">
@@ -313,7 +313,7 @@
                 <!-- ENCODING SECTION -->
                 <div class="section">
                     <h3>🔐 Encode (Hide Message)</h3>
-                    
+
                     <div class="form-group">
                         <label for="encodeImage">Step 1: Select Image</label>
                         <input type="file" id="encodeImage" accept="image/*">
@@ -326,16 +326,16 @@
                     </div>
 
                     <button class="btn btn--primary" id="encodeBtn" style="width: 100%; margin-top: 12px;">➜ Encode & Download</button>
-                    
+
                     <canvas id="encodeCanvas" class="canvas-preview" width="300" height="200"></canvas>
-                    
+
                     <div class="status" id="encodeStatus" style="display: none;"></div>
                 </div>
 
                 <!-- DECODING SECTION -->
                 <div class="section">
                     <h3>🔓 Decode (Extract Message)</h3>
-                    
+
                     <div class="form-group">
                         <label for="decodeImage">Step 1: Select Stego Image</label>
                         <input type="file" id="decodeImage" accept="image/*">
@@ -346,11 +346,11 @@
 
                     <label style="margin-top: 18px;">Extracted Message:</label>
                     <div class="output-box" id="decodedOutput">No message extracted yet...</div>
-                    
+
                     <button class="btn btn--ghost" id="clearBtn" style="margin-top: 14px; width: 100%;">↺ Reset All</button>
-                    
+
                     <canvas id="decodeCanvas" class="canvas-preview" width="300" height="200"></canvas>
-                    
+
                     <div class="status" id="decodeStatus" style="display: none;"></div>
                 </div>
             </div>
@@ -390,8 +390,8 @@
             <section class="demo__tips">
                 <h3>💡 Tips & Capacity Guide</h3>
                 <ul class="bullets">
-                    <li><span class="icon">⚡</span> <strong>Image Size Matters:</strong> Each pixel can store 1 bit per channel (3 bits per RGB pixel)</li>
-                    <li><span class="icon">⚡</span> <strong>Capacity:</strong> A 256×256 image can hide ~24KB of data</li>
+                    <li><span class="icon">⚡</span> <strong>Image Size Matters:</strong> This demo stores 1 bit per pixel in the red channel</li>
+                    <li><span class="icon">⚡</span> <strong>Capacity:</strong> A 256×256 image can hide about 8KB of UTF-8 data</li>
                     <li><span class="icon">⚡</span> <strong>PNG is Best:</strong> PNG uses lossless compression - JPEG destroys LSBs</li>
                     <li><span class="icon">⚡</span> <strong>Detection:</strong> Steganalysis tools use chi-square analysis to detect patterns</li>
                     <li><span class="icon">⚡</span> <strong>Security:</strong> Combine LSB with encryption for true security</li>
@@ -507,10 +507,10 @@
                     fullCanvas.height = img.height;
                     const fullCtx = fullCanvas.getContext('2d');
                     fullCtx.drawImage(img, 0, 0);
-                    
+
                     // Get full-resolution image data
                     const fullImageData = fullCtx.getImageData(0, 0, img.width, img.height);
-                    
+
                     // Draw preview (scaled for UI)
                     const w = canvas.width;
                     const h = canvas.height;
@@ -559,7 +559,7 @@
             try {
                 // Encode the message
                 const encoded = encodeMessage(encodeImageData, message);
-                
+
                 if (encoded.success) {
                     // Create download canvas
                     const dlCanvas = document.createElement('canvas');
@@ -567,7 +567,7 @@
                     dlCanvas.height = encoded.imageData.height;
                     const dlCtx = dlCanvas.getContext('2d');
                     dlCtx.putImageData(encoded.imageData, 0, 0);
-                    
+
                     dlCanvas.toBlob((blob) => {
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
@@ -607,7 +607,7 @@
 
             try {
                 const decoded = decodeMessage(decodeImageData);
-                
+
                 if (decoded.success) {
                     decodedOutput.textContent = decoded.message;
                     incrementDemoHistory('decoded');
@@ -633,7 +633,7 @@
             decodeImageObj = null;
             hideStatus(encodeStatus);
             hideStatus(decodeStatus);
-            
+
             // Clear canvases
             encodeCtx.clearRect(0, 0, encodeCanvas.width, encodeCanvas.height);
             decodeCtx.clearRect(0, 0, decodeCanvas.width, decodeCanvas.height);
@@ -655,7 +655,7 @@
             const msgLen = msgBytes.length;
             const pixelCount = data.length / 4;
 
-            // Check capacity: 32 bits for length + 8 bits per character
+            // This implementation stores one bit per pixel in the red channel.
             const bitsNeeded = 32 + (msgLen * 8);
             if (bitsNeeded > pixelCount) {
                 return {
@@ -719,7 +719,7 @@
             // Read message bytes
             const msgBytes = new Uint8Array(msgLen);
             let bitPos = 0;
-            
+
             for (let byteIdx = 0; byteIdx < msgLen; byteIdx++) {
                 let byte = 0;
                 for (let bitIdx = 0; bitIdx < 8; bitIdx++) {
